@@ -13,6 +13,10 @@ public class App extends Foo implements Boo {
 	private Integer size;
 	private double x = 1D;
 
+	static{
+		System.out.println(12321);
+	}
+
 	public static String getNAME() {
 		return NAME;
 	}
@@ -95,4 +99,8 @@ public class App extends Foo implements Boo {
 			}
 		});
 	}
+}
+
+enum BoyEnum{
+	BOY,MAN;
 }
