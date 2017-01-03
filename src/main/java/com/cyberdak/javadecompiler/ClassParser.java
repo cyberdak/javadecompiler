@@ -81,7 +81,7 @@ public class ClassParser {
     }
 
     public static void main(String[] args) throws Exception {
-        String path = Thread.currentThread().getContextClassLoader().getResource("com/cyberdak/javadecompiler/App.class").getPath().toString();
+        String path = Thread.currentThread().getContextClassLoader().getResource("com/cyberdak/javadecompiler/Simple.class").getPath().toString();
         File file = new File(path);
         FileInputStream fis = new FileInputStream(file);
         DataInputStream input = new DataInputStream(fis);
@@ -230,18 +230,20 @@ public class ClassParser {
             System.out.println(key + ":" + UTF8Map.get(key));
         }
 
-        // 字段 field
+        // class 信息
         int accessFlag = u2(input);
-        System.out.println("accessFlag:" + getFlags(accessFlag,accessFlagMap));
+        System.out.println("class accessFlag:" + getFlags(accessFlag,accessFlagMap));
         int thisClassIndex = u2(input);
         int superClassIndex = u2(input);
         int interfaceCount = u2(input);
+        System.out.println("interface count : " + interfaceCount);
         // interface
         for (int i = 1; i <= interfaceCount; i++) {
             int interfaceIndex = u2(input);
         }
         // field
         int fieldCount = u2(input);
+        System.out.println("field count : " + fieldCount);
         for (int i = 1; i <= fieldCount; i++) {
             int fieldAccessFlags = u2(input);
             int nameIndex = u2(input);
@@ -260,6 +262,7 @@ public class ClassParser {
         }
         // parse method info
         int methodCount = u2(input);
+        System.out.println("method count : " + methodCount);
         for (int i = 1; i <= methodCount; i++) {
             int methodAccessFlags = u2(input);
             int methodNameIndex = u2(input);
@@ -273,14 +276,20 @@ public class ClassParser {
                 parseAttribute(input, UTF8Map);
             }
         }
+
+        // parse attribute
+        int attributesCount = u2(input);
+        for (int i = 1; i <= attributesCount; i++) {
+         parseAttribute(input,UTF8Map);
+        }
     }
 
     public static final void parseAttribute(DataInputStream input, Map<Integer, String> UTF8Map) throws Exception {
         int attributeNameIndex = u2(input);
         int attributeLength = u4(input);
-        System.out.println("attribute name index : " + attributeNameIndex);
         String attributeName = UTF8Map.get(attributeNameIndex);
-        System.out.println("attributeName : " + attributeName);
+        System.out.println("attribute name index : " + attributeNameIndex +", attribute name :" + attributeName + ",length : " + attributeLength);
+
         if(attributeName == null){
             return ;
         }
@@ -334,6 +343,7 @@ public class ClassParser {
             case Constants.SOURCE_FILE:
                 System.out.println("source file :");
                 short sourceFileIndex = u2(input);
+                System.out.println("sourceFileIndex : " + sourceFileIndex );
                 String sourceFile = UTF8Map.get(sourceFileIndex);
                 System.out.println(sourceFile);
                 break;
@@ -413,9 +423,11 @@ public class ClassParser {
                 }
                 break;
             case Constants.ANNOTATION_DEFAULT:
+                System.out.println("annotation default");
                 parseElementValue(input, UTF8Map);
                 break;
             case Constants.BOOTSTRAP_METHODS:
+                System.out.println("bootstrap method");
                 short bootstrapMethodsNum = u2(input);
                 for (int i = 1; i <= bootstrapMethodsNum; i++) {
                     u2(input);
@@ -426,6 +438,7 @@ public class ClassParser {
                 }
                 break;
             case Constants.EXCEPTIONS:
+                System.out.println("exceptions");
                 short numberOfExceptions = u2(input);
                 for (int i = 1; i <= numberOfExceptions; i++) {
                     short exceptionIndex = u2(input);
@@ -433,14 +446,19 @@ public class ClassParser {
                 }
                 break;
             case Constants.CODE:
+                System.out.println("code");
                 short maxStack = u2(input);
+                System.out.println("maxStack : " + maxStack);
                 short maxLocals = u2(input);
+                System.out.println("maxLocals : " + maxLocals);
                 int codeLength = u4(input);
+                System.out.println("codeLength : "+ codeLength);
                 for (int q = 1; q <= codeLength; q++) {
                     byte opcode = u1(input);
-                    String.format("%x", opcode);
+                    System.out.println(String.format("%x", opcode));
                 }
                 short exceptionTableLength = u2(input);
+                System.out.println("exceptionTableLength : " + exceptionTableLength);
                 for (int p = 1; p <= exceptionTableLength; p++) {
                     int startPc = u2(input);
                     int endPc = u2(input);
@@ -448,6 +466,7 @@ public class ClassParser {
                     int catchType = u2(input);
                 }
                 int attCount = u2(input);
+                System.out.println("method code att count : " + attCount);
                 for (int z = 1; z <= attCount; z++) {
                     parseAttribute(input, UTF8Map);
                 }
