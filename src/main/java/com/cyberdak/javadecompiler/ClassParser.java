@@ -455,7 +455,7 @@ public class ClassParser {
                 System.out.println("codeLength : "+ codeLength);
                 for (int q = 1; q <= codeLength; q++) {
                     byte opcode = u1(input);
-                    System.out.println(String.format("%x", opcode));
+                    System.out.println(String.format("%x", opcode) + " --> " + OpCode.opcodeMap.get(opcode));
                 }
                 short exceptionTableLength = u2(input);
                 System.out.println("exceptionTableLength : " + exceptionTableLength);
