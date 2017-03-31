@@ -5,7 +5,10 @@
   <groupId>com.cyberdak</groupId>
   <artifactId>javadecompiler</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <modules>
+    <module>groovytest</module>
+  </modules>
+  <packaging>pom</packaging>
 
   <name>javadecompiler</name>
   <url>http://maven.apache.org</url>
