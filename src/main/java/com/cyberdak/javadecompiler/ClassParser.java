@@ -100,6 +100,7 @@ public class ClassParser {
         int constantPoolCount = u2(input);
         String[] constantPool = new String[constantPoolCount + 1];
         Map<Integer, String> UTF8Map = Maps.newHashMap();
+        Maps.newHashMapWithExpectedSize(100);
         ArrayListMultimap<Integer, Integer> map = ArrayListMultimap.create();
         System.out.println("constantPoolCount:" + constantPoolCount);
         // 常量池处理
@@ -370,8 +371,8 @@ public class ClassParser {
                     short nameIndex = u2(input);
                     short descriptorIndex = u2(input);
                     short vIndex = u2(input);
-                    System.out.println("startPc:" + startPc + ",length:" + length + ",name:" + UTF8Map.get(nameIndex) +
-                            ",descriptor:" + UTF8Map.get(descriptorIndex) + ",index:" + vIndex);
+                    System.out.println("startPc:" + startPc + ",length:" + length + ",name:" + getString(nameIndex,UTF8Map) +
+                            ",descriptor:" + getString(descriptorIndex,UTF8Map) + ",index:" + vIndex);
                 }
                 break;
             case Constants.LOCAL_VARIABLE_TYPE_TABLE:
@@ -383,8 +384,8 @@ public class ClassParser {
                     short nameIndex = u2(input);
                     short signatureIndex1 = u2(input);
                     short vindex = u2(input);
-                    System.out.println("startPc:" + startPc + ",length:" + length + ",name:" + UTF8Map.get(nameIndex) +
-                            ",descriptor:" + UTF8Map.get(signatureIndex1) + ",index:" + vindex);
+                    System.out.println("startPc:" + startPc + ",length:" + length + ",name:" + getString(nameIndex,UTF8Map) +
+                            ",descriptor:" + getString(signatureIndex1,UTF8Map) + ",index:" + vindex);
 
                 }
                 break;
@@ -455,6 +456,11 @@ public class ClassParser {
                 System.out.println("codeLength : "+ codeLength);
                 for (int q = 1; q <= codeLength; q++) {
                     byte opcode = u1(input);
+                    OpCode opCode = OpCode.opcodeMap.get(opcode);
+                    for (int i =  0 ; i < opCode.getParamSize(); i++ ){
+                        u1(input);
+                        q++;
+                    }
                     System.out.println(String.format("%x", opcode) + " --> " + OpCode.opcodeMap.get(opcode));
                 }
                 short exceptionTableLength = u2(input);
@@ -547,5 +553,18 @@ public class ClassParser {
             }
         }
         return flagList;
+    }
+
+
+    public static String getString(Integer i,Map<Integer,String> map){
+        return map.get(i);
+    }
+
+    public static String getString(Short s,Map<Integer,String> map){
+        return map.get(s.intValue());
+    }
+
+    public static String getString(Byte s,Map<Integer,String> map){
+        return map.get(s.intValue());
     }
 }

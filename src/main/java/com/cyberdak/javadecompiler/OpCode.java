@@ -215,11 +215,11 @@ public enum OpCode {
     impdep1_1((byte) 0xff, 2, "用于在特定硬件中使用的语言后门。");
 
 
-    public static Map<Byte, String> opcodeMap = Maps.newHashMap();
+    public static Map<Byte, OpCode> opcodeMap = Maps.newHashMap();
 
     static {
-        for (OpCode opcode : OpCode.values()) {
-            opcodeMap.put(opcode.getCode(), opcode.name());
+        for (OpCode opCode : OpCode.values()) {
+            opcodeMap.put(opCode.getCode(), opCode);
         }
     }
 
