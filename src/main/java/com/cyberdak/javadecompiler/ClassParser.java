@@ -345,8 +345,8 @@ public class ClassParser {
                 System.out.println("source file :");
                 short sourceFileIndex = u2(input);
                 System.out.println("sourceFileIndex : " + sourceFileIndex );
-                String sourceFile = UTF8Map.get(sourceFileIndex);
-                System.out.println(sourceFile);
+                String sourceFile = getString(sourceFileIndex,UTF8Map);
+                System.out.println("source file :"+sourceFile);
                 break;
             case Constants.SOURCE_DEBUG_EXTENSION:
                 for (int q = 1; q <= attributeLength; q++) {
